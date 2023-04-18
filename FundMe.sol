@@ -8,18 +8,37 @@ import "./PriceConverter.sol";
 
 pragma solidity ^0.8.8;
 
+//Tener en cuenta que al usar constant o immutable para las variables puede hacer bajar el gas necesario para el contrato
+//El contrato sin constant en niguna variable 912230 gas para deployarlo
+//El mismo contrato pero estableciendo minimumUsd como constant: 889757 gas y lo mismo pasa para el uso de las funciones que usan estos valores o para la consulta de dichos valores desde otros contratos
+//El mismo pero con minimumUsd constant y owner immutable: 862627 gas
+//El ahorro de gas al hacer esto se da porque en lugar de almacenar estas variables en memoria, se almacenan directamente en el bytecode del contrato
+
+//Otra cosa que podemos hacer para ahorrar gas, desde la version 0.8.4 es reemplazar los require por custom errors
+//Con todos los custom errors el gas para deployar bajo a 772190
+error NotOwner();
+error CallFailed();
+error DidntSendEnough();
 contract FundMe {
 
     using PriceConverter for uint256; //defino que la libreria PriceConverter va a operar sobre valores uint256
 
-    uint256 public minimumUsd = 50 * 1e18;
+    uint256 public constant MINIMUM_USD = 50 * 1e18;
 
     address[] public funders;
     mapping(address => uint256) public addressToAmountFunded;
-    address public owner;
+    address public immutable i_owner; //Las variables que solo vamos a inicializar, pero nunca modificar las declaramos como immutable
 
     constructor(){
-        owner = msg.sender;
+        i_owner = msg.sender;
+    }
+
+    receive() external payable { //Puedo hacer esto para el caso de que alguien envie eth al contrato en lugar de usar fund
+        fund();
+    }
+
+    fallback() external payable {
+        fund();
     }
 
     function fund() public payable {
@@ -34,7 +53,8 @@ contract FundMe {
 
         //msg.value.getConversionRate(); //Ahora puedo hacer uso de los metodos de la libreria de esta forma ya que lo tengo disponible para el tipo uint256.
         //require(getConversionRate(msg.value) >= minimumUsd, "Didn't send enough!");
-        require(msg.value.getConversionRate() > minimumUsd, "Didn't send enough!");
+        //require(msg.value.getConversionRate() > MINIMUM_USD, "Didn't send enough!");
+        if(msg.value.getConversionRate() < MINIMUM_USD) {revert DidntSendEnough();}
         funders.push(msg.sender); //msg.sender es otra de las variables globales de solidity
         addressToAmountFunded[msg.sender] = msg.value;
     }
@@ -63,11 +83,14 @@ contract FundMe {
 
         //call - call es un comado de bajo nivel y es el primero de este tipo que vamos a ver. La podemos usar para llamar cualquier funcion en ethereum
         (bool callSuccess, ) = payable(msg.sender).call{value: address(this).balance}("");
-        require(callSuccess, "Call failed");
+        //require(callSuccess, "Call failed");
+        if(!callSuccess){revert CallFailed();}
     }
 
     modifier onlyOwner {
-        require(msg.sender == owner, "Sender is not owner");
+        // require(msg.sender == i_owner, "Sender is not owner");
+        if(msg.sender != i_owner) {revert NotOwner();} //ahorra gas respecto al require
         _; //Con esta linea indico que se continue con la funcion a la que se le aplico el modifier
     }
+
 }
