@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.8;
+pragma solidity ^0.8.7;
 
 contract SimpleStorage {
-    uint256 public favouriteNumber;//Si no le pongo un modificador de acceso, la variable por defecto es internal
+    uint256 public favouriteNumber; //Si no le pongo un modificador de acceso, la variable por defecto es internal
 
     mapping(string => uint256) public nameToFavouriteNumber;
 
@@ -13,11 +13,12 @@ contract SimpleStorage {
 
     People[] public people;
 
-    function store(uint256 _favouriteNumber) public virtual {//Al indicarla como virtual, permite overridear la funcion mediante herencia
-        favouriteNumber = _favouriteNumber; 
+    function store(uint256 _favouriteNumber) public virtual {
+        //Al indicarla como virtual, permite overridear la funcion mediante herencia
+        favouriteNumber = _favouriteNumber;
     }
 
-    function retrieve() public view returns(uint256){
+    function retrieve() public view returns (uint256) {
         return favouriteNumber;
     }
 
@@ -29,5 +30,4 @@ contract SimpleStorage {
         people.push(People(_favouriteNumber, _name));
         nameToFavouriteNumber[_name] = _favouriteNumber;
     }
-
 }
