@@ -24,6 +24,7 @@ async function main() {
   console.log("Deploying contract..");
   const contract = await contractFactory.deploy();
   const transactionReceipt = await contract.deployTransaction.wait(1); //con wait(1) esperamos una confirmacion de bloque para asegurarnos de que la transaccion se realizo
+  console.log(`Contract Address: ${contract.address}`)
   console.log("transaction: ", contract.deployTransaction);
   console.log("receipt: ", transactionReceipt);
 
