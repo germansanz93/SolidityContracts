@@ -26,6 +26,11 @@ module.exports = {
 			accounts: [SEPOLIA_PRIVATE_KEY],
 			chainId: 11155111,
 		},
+    localhost: {
+      url: 'http://127.0.0.1:8545/',
+      //accounts: No hace falta.. ya hardhat nos da 10 direcciones, que son las que vemos cuando hacemos harhdat node
+      chainId: 31337
+    },
 	},
 	solidity: "0.8.8",
 	etherscan: {
