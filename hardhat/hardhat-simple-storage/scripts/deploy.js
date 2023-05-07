@@ -13,6 +13,16 @@ async function main() {
 		await simpleStorage.deployTransaction.wait(6) //Esperamos 6 confirmaciones de bloque antes de hacer la verificacion porque a veces etherscan tarda un poquito en procesar y disponer de la info. Con esto nos ahorramos problemas.
     await verify(simpleStorage.address, [])
 	}
+
+  //Interactuando con el contrato a traves de hardhat
+  const currentValue = await simpleStorage.retrieve();
+  console.log(`Current value is: ${currentValue}`)
+
+  //Update the current value
+  const transactionResponse = await simpleStorage.store(7);
+  await transactionResponse.wait(1)
+  const updatedValue = await simpleStorage.retrieve();
+  console.log(`Updated value is ${updatedValue}`)
 }
 
 async function verify(contractAddress, args) {
