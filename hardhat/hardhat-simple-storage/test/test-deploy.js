@@ -22,4 +22,12 @@ describe("SimpleStorage", () => {
     const expectedValue = "10"
     assert.equal(currentValue.toString(), expectedValue)
   })
+
+  it("Should add person when we call addPerson", async () => {
+    const name = "Messi"
+    const transactionResponse = await simpleStorage.addPerson(name, 10)
+    await transactionResponse.wait(1)
+    const favouriteFromName = await simpleStorage.nameToFavoriteNumber(name)
+    assert.equal(favouriteFromName, 10)
+  })
 })
