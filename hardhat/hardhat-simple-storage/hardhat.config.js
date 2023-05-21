@@ -4,6 +4,7 @@ require("@nomicfoundation/hardhat-toolbox")
 require("dotenv").config()
 require("@nomiclabs/hardhat-etherscan")
 require("./tasks/block-number")
+require("hardhat-gas-reporter")
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 	const accounts = await hre.ethers.getSigners()
@@ -16,6 +17,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const SEPOLIA_RPC_URL = process.env.SEPOLIA_RPC_URL
 const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY
+const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -26,14 +28,21 @@ module.exports = {
 			accounts: [SEPOLIA_PRIVATE_KEY],
 			chainId: 11155111,
 		},
-    localhost: {
-      url: 'http://127.0.0.1:8545/',
-      //accounts: No hace falta.. ya hardhat nos da 10 direcciones, que son las que vemos cuando hacemos harhdat node
-      chainId: 31337
-    },
+		localhost: {
+			url: "http://127.0.0.1:8545/",
+			//accounts: No hace falta.. ya hardhat nos da 10 direcciones, que son las que vemos cuando hacemos harhdat node
+			chainId: 31337,
+		},
 	},
 	solidity: "0.8.8",
 	etherscan: {
 		apiKey: ETHERSCAN_API_KEY,
+	},
+	gasReporter: {
+		enabled: true,
+		outputFile: "gas-report.txt",
+		noColors: true,
+		currency: "USD",
+		coinmarketcap: COINMARKETCAP_API_KEY,
 	},
 }
