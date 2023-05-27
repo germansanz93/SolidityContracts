@@ -3,8 +3,8 @@ const { task } = require("hardhat/config")
 require("@nomicfoundation/hardhat-toolbox")
 require("dotenv").config()
 require("@nomiclabs/hardhat-etherscan")
-require("./tasks/block-number")
 require("hardhat-gas-reporter")
+require("hardhat-deploy")
 require("solidity-coverage")
 
 task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
@@ -45,5 +45,13 @@ module.exports = {
 		noColors: true,
 		currency: "USD",
 		coinmarketcap: COINMARKETCAP_API_KEY,
+	},
+	namedAccounts: {
+		deployer: {
+			default: 0,
+		},
+		user: {
+			default: 1,
+		},
 	},
 }
