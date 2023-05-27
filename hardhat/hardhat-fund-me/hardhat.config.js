@@ -35,7 +35,13 @@ module.exports = {
 			chainId: 31337,
 		},
 	},
-	solidity: "0.8.8",
+	// solidity: "0.8.8",
+	solidity: {
+		compilers: [
+			{version: "0.8.8"}, //Podemos setear mas de un compiler por si tenemos varios compiladores diferentes definidos en nuestros contratos
+			{version: "0.6.6"}
+		]
+	},
 	etherscan: {
 		apiKey: ETHERSCAN_API_KEY,
 	},
