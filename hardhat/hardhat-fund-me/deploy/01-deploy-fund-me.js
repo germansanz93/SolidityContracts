@@ -1,7 +1,7 @@
 // module.exports = async(hre) => { //hre is hardhat runtime environment
 //   const {getNamedAccounts, deployments} = hre
 // }
-const { verify } = require("../hardhat.config")
+// const { verify } = require("../hardhat.config")
 const { networkConfig, developmentChains } = require("../helper-hardhat-config")
 const { network } = require("hardhat")
 const { verify } = require("../utils/verify")
@@ -24,10 +24,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
 	//Creacion de un contrato de mock para hacer pruebas en redes donde no tenemos disponibles un feed, por ejemplo la red local
 	//Si el contrato no existe, deployaremos una version minima de el para nuestro testing local
 	const args = [ethUsdPriceFeedAddress]
-  const fundMe = await deploy("FundMe", {
+	const fundMe = await deploy("FundMe", {
 		from: deployer,
 		args: args, //put price feed address
 		log: true,
+		waitConfirmations: network.config.blockConfirmations || 1,
 	})
 
 	if (

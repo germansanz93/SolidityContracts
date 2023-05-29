@@ -28,6 +28,7 @@ module.exports = {
 			url: SEPOLIA_RPC_URL,
 			accounts: [SEPOLIA_PRIVATE_KEY],
 			chainId: 11155111,
+			blockConfirmations: 6,
 		},
 		localhost: {
 			url: "http://127.0.0.1:8545/",
@@ -38,9 +39,9 @@ module.exports = {
 	// solidity: "0.8.8",
 	solidity: {
 		compilers: [
-			{version: "0.8.8"}, //Podemos setear mas de un compiler por si tenemos varios compiladores diferentes definidos en nuestros contratos
-			{version: "0.6.6"}
-		]
+			{ version: "0.8.8" }, //Podemos setear mas de un compiler por si tenemos varios compiladores diferentes definidos en nuestros contratos
+			{ version: "0.6.6" },
+		],
 	},
 	etherscan: {
 		apiKey: ETHERSCAN_API_KEY,
